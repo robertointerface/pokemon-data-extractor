@@ -5,6 +5,9 @@ from src.data_extractors.api_extractor import AsyncPokemonRestApiConsumer
 from src.constants import POKEMON_API_URL
 from collections import abc
 
+from src.exceptions import PokemonNotFoundError
+
+
 @pytest.mark.unit
 class TestAsyncPokemonApiExtractor:
 
@@ -24,8 +27,9 @@ class TestAsyncPokemonApiExtractor:
             await api_consumer.get_pokemon_data(client)
             assert isinstance(api_consumer.api_result, abc.MutableMapping)
 
-    def test_HttpError_is_raised_if_rest_api_returns_non_2xx_response(self):
-        pass
-
-    def test_get_pokemon_data_method_saves_result_on_attribute_api_result(self):
-        pass
+    async def test_PokemonNotFoundError_is_raised_if_rest_api_returns_non_2xx_response(self,
+                                                                      mock_AsyncClient_returns_error):
+        api_consumer =AsyncPokemonRestApiConsumer('non-existing')
+        with pytest.raises(PokemonNotFoundError):
+            async with AsyncClient() as client:
+                await api_consumer.get_pokemon_data(client)

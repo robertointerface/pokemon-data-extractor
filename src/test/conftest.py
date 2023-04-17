@@ -1,5 +1,7 @@
+import random
 from unittest.mock import AsyncMock
 from typing import Dict
+import asyncio
 import pytest
 from pytest_mock import mocker
 from httpx import AsyncClient
@@ -7,11 +9,17 @@ import json
 from collections import abc
 from pathlib import Path
 
+from src.data_savers.json_file_saver import JsonFileSaver
 from src.job_status import PokemonJob
+from src.queue_workers import JobQueue
 
 TEST_DATA_PATH = Path(__file__).parent / 'test_data'
-POKEMONS_TO_TEST = ['mewtwo', 'charizar', 'Bulbasaur', 'Gengar',
-                    'Lapras', 'pikachu']
+POKEMONS_TO_TEST = ['mewtwo', 'charmander', 'gengar',
+                    'lapras', 'pikachu']
+
+POKEMON_TO_TEST_ONE_WRONG = ['mewtwo', 'non-existing', 'gengar',
+                             'lapras', 'pikachu']
+
 
 def mock_httpx_response(response_status_code: int, response_json: Dict=None):
     """Mock an httpx response.
@@ -74,6 +82,7 @@ def mock_failure_httpx_response():
     httpx_mocked = AsyncMock(return_value=httpx_response)
     return httpx_mocked
 
+
 @pytest.fixture(name='mock_AsyncClient_get')
 def mock_AsyncClient_returns_pokemon_data_correctly(mocker,
                                                     mock_success_httpx_response):
@@ -81,10 +90,74 @@ def mock_AsyncClient_returns_pokemon_data_correctly(mocker,
                         'get',
                         side_effect=mock_success_httpx_response)
 
+@pytest.fixture()
+def mock_AsyncClient_returns_error(mocker,
+                                   mock_failure_httpx_response):
+    mocker.patch.object(AsyncClient,
+                        'get',
+                        side_effect=mock_failure_httpx_response)
+
+@pytest.fixture()
+def mock_AsyncClient_returns_error_one_time(mocker,
+                                            mock_failure_httpx_response,
+                                            mock_success_httpx_response):
+    random_failure = random.randint(0, len(POKEMONS_TO_TEST) - 1)
+    side_effects_list = []
+    for i in range(len(POKEMONS_TO_TEST)):
+        # mock_failure_httpx_response and mock_success_httpx_response are
+        # already AsyncMocks, we can not set a list of AsyncMocks as side_effect
+        # To have multiple side effect values you need ONE single AsyncMock with
+        # multiple side effects as below, that is why we take the 'return_value'
+        # of mock_failure_httpx_response & mock_success_httpx_response
+        if i == random_failure:
+            side_effects_list.append(mock_failure_httpx_response.return_value)
+        else:
+            side_effects_list.append(mock_success_httpx_response.return_value)
+    mocked = AsyncMock(side_effect=side_effects_list)
+    mocker.patch.object(AsyncClient,
+                        'get',
+                        side_effect=mocked)
 
 
 @pytest.fixture(name="job_list")
 def mock_pokemon_jobs_list():
     return [PokemonJob(pokemon) for pokemon in POKEMONS_TO_TEST]
 
+
+@pytest.fixture
+def contaminated_job_list():
+    return [PokemonJob(pokemon) for pokemon in POKEMON_TO_TEST_ONE_WRONG]
+
+
+@pytest.fixture
+def mock_JsonFileSaver_save_data_method(mocker):
+    mocked = AsyncMock()
+    mocker.patch.object(JsonFileSaver,
+                        'save_data',
+                        side_effect=mocked)
+    return mocked
+
+
+@pytest.fixture
+async def mock_job_queue(job_list, rest_api_200_json_response):
+    queue = asyncio.Queue()
+    for job in job_list:
+        job.set_pokemon_result(rest_api_200_json_response)
+        job.set_job_status_extracted_data()
+        await queue.put(job)
+    return queue
+
+
+@pytest.fixture
+def job_queue(job_list):
+    job_queue = JobQueue()
+    [job_queue.enqueue(job) for job in job_list]
+    return job_queue
+
+
+@pytest.fixture(name='contaminated_job_queue')
+def job_queue_with_one_failure(contaminated_job_list):
+    job_queue = JobQueue()
+    [job_queue.enqueue(job) for job in contaminated_job_list]
+    return job_queue
 

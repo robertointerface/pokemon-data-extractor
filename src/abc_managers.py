@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
 
-class AbcDataExtractorManager(ABC):
+class AbcJobProcessorManager(ABC):
 
     @abstractmethod
     def get_job(self):
         pass
 
     @abstractmethod
-    def keep_processing_density_jobs(self):
+    def keep_processing_jobs(self):
         pass
 
     @abstractmethod

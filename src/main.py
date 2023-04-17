@@ -1,5 +1,7 @@
 import argparse
+import asyncio
 
+from src.constants import JSON_FILE_SAVER_MODE
 from src.job_organizer import DataExtractorOrganizer
 from src.job_status import PokemonJob
 from src.queue_workers import JobQueue
@@ -20,19 +22,13 @@ parser.add_argument('-s',
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
-    pokemon_names = args.pokemons
-    data_saver = args.saver
+    # args = parser.parse_args()
+    # pokemon_names = args.pokemons
+    # data_saver = args.saver
+    pokemon_names = ['mewtwo', 'charmander', 'gengar', 'non-existing']
     pokemon_job_queue = JobQueue()
     pokemon_jobs = [PokemonJob(name) for name in pokemon_names]
-    jobs_queue = map(pokemon_job_queue.enqueue, pokemon_jobs)
-    extractor_organizer = DataExtractorOrganizer(jobs_queue)
-    extractor_organizer.set_data_saver_mode(data_saver)
-
-    # create a deque of JobStatus
-    # init data extractor organizer
-    # set data_saver mode
-    # init httpx client
-    #
-
-    
+    [pokemon_job_queue.enqueue(job) for job in pokemon_jobs]
+    extractor_organizer = DataExtractorOrganizer(pokemon_job_queue)
+    extractor_organizer.set_data_saver_mode(JSON_FILE_SAVER_MODE)
+    asyncio.run(extractor_organizer.start())
