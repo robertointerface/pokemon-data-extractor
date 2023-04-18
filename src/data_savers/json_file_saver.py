@@ -5,7 +5,9 @@ from collections.abc import MutableMapping
 
 
 class JsonFileSaver:
-
+    """
+    Save data in a json file
+    """
     def __init__(self, file_path: Path):
         self.file_path = file_path
 
@@ -21,6 +23,13 @@ class JsonFileSaver:
         self._file_path = value
 
     async def save_data(self, data: MutableMapping):
+        """Save data returned from pokemon API on a json file. The name
+            of the file will <pokemon_name>.json, files are saved on the
+            specified path when initialising this class.
+
+        Args:
+            data: Data in dictionary format.
+        """
         pokemon_name = data.get('name')
         if isinstance(data, MutableMapping):
             data = json.dumps(data)

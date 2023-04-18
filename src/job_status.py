@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from typing import List, Dict
+
 from src.constants import POKEMON_API_URL
 
 
@@ -8,35 +10,42 @@ class JobResult:
 
 
 @dataclass
+class ProcessStatus:
+    process_id: str
+    active: False
+
+
+@dataclass
 class PipelineStatus:
-    pokemon_data_extractor_started = False
-    pokemon_data_extractor_finished = False
-    pokemon_data_saver_started = False
-    pokemon_data_saver_finished = False
-    error_handling_started = False
-    error_handling_finished = False
+    pokemon_data_extractor_started: bool = False
+    pokemon_data_extractor_finished: bool = False
+    pokemon_data_saver_started: bool = False
+    pokemon_data_saver_finished: bool = False
+    error_handling_started: bool = False
+    error_handling_finished: bool = False
+    pokemon_extractor_workers: Dict = None
+    pokemon_saver_workers: Dict = None
+    error_handling_workers: Dict = None
 
     def set_pokemon_data_extractor_starter(self):
-        if not self.pokemon_data_extractor_started:
-            self.pokemon_data_extractor_started = True
+        self.pokemon_data_extractor_started = True
 
     def set_pokemon_data_extractor_finished(self):
-        if not self.pokemon_data_extractor_finished:
-            self.pokemon_data_extractor_finished = True
+        self.pokemon_data_extractor_finished = True
 
     def set_pokemon_data_saver_started_started(self):
-        if not self.pokemon_data_saver_started:
-            self.pokemon_data_saver_started = True
+        self.pokemon_data_saver_started = True
 
     def set_pokemon_data_saver_finished(self):
-        if not self.pokemon_data_saver_finished:
-            self.pokemon_data_saver_finished = True
+        self.pokemon_data_saver_finished = True
 
     def set_error_handling_started(self):
         self.error_handling_started = True
 
     def set_error_handling_finished(self):
         self.error_handling_finished = True
+
+
 
 @dataclass
 class JobStatus:

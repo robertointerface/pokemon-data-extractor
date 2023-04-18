@@ -25,9 +25,8 @@ class TestDataExtractorOrganizer:
                                         rest_api_200_json_response):
         src.job_organizer.DEFAULT_JSON_FILE = tmp_path
         data_extractor_organizer = DataExtractorOrganizer(job_queue)
-        data_extractor_organizer.set_data_saver_mode(constants.JSON_FILE_SAVER_MODE)
-        async with AsyncClient() as client:
-            await data_extractor_organizer.start(client)
+        data_extractor_organizer.set_result_exporter_mode(constants.JSON_FILE_SAVER_MODE)
+        await data_extractor_organizer.start()
         if not os.listdir(tmp_path):
             pytest.fail(f'No pokemon files were saved')
         for file in os.listdir(tmp_path):
@@ -40,10 +39,10 @@ class TestDataExtractorOrganizer:
                                                         job_queue):
         src.job_organizer.DEFAULT_JSON_FILE = tmp_path
         data_extractor_organizer = DataExtractorOrganizer(job_queue)
-        data_extractor_organizer.set_data_saver_mode(
+        data_extractor_organizer.set_result_exporter_mode(
             constants.JSON_FILE_SAVER_MODE)
-        async with AsyncClient() as client:
-            await data_extractor_organizer.start(client)
+
+        await data_extractor_organizer.start()
         if not os.listdir(tmp_path):
             pytest.fail(f'No pokemon files were saved')
         for file in os.listdir(tmp_path):
@@ -58,8 +57,7 @@ class TestDataExtractorOrganizer:
                                      job_queue):
         src.job_organizer.DEFAULT_JSON_FILE = tmp_path
         data_extractor_organizer = DataExtractorOrganizer(job_queue)
-        data_extractor_organizer.set_data_saver_mode(
+        data_extractor_organizer.set_result_exporter_mode(
             constants.JSON_FILE_SAVER_MODE)
-        async with AsyncClient() as client:
-            await data_extractor_organizer.start(client)
+        await data_extractor_organizer.start()
         assert 'Failed to extract data from pokemon' in caplog.text
