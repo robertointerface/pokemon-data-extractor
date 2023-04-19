@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "pokemon-data-extractor"
+version = "0.1.0"
+description = "extract pokemon data with pokemon API"
+authors = ["roberto <robertointerface@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+httpx = "^0.24.0"
+aiofile = "^3.8.5"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+pytest-asyncio = "^0.21.0"
+pytest-mock = "^3.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
