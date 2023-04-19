@@ -3,8 +3,8 @@ from asyncio import Queue
 from unittest.mock import AsyncMock
 from pytest_mock import mocker
 from httpx import AsyncClient
-from src.data_extractors.data_extractor_manager import DataExtractorManager
-from src.job_status import PipelineStatus
+from data_extractors.data_extractor_manager import DataExtractorManager
+from job_status import PipelineStatus
 
 
 @pytest.mark.unit

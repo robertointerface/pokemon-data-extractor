@@ -1,9 +1,9 @@
 import uuid
-from src.data_extractors.api_extractor import AsyncPokemonRestApiConsumer
-from src.exceptions import PokemonNotFoundError
-from src.queue_workers import JobQueue
+from data_extractors.api_extractor import AsyncPokemonRestApiConsumer
+from exceptions import PokemonNotFoundError
+from queue_workers import JobQueue
 from asyncio import Queue
-from src.abc_managers import AbcJobProcessorManager
+from abc_managers import AbcJobProcessorManager
 
 
 class DataExtractorManager(AbcJobProcessorManager):

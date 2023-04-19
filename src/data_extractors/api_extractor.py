@@ -1,9 +1,9 @@
 import json
 from httpx import AsyncClient
-from src.constants import POKEMON_API_URL
+from constants import POKEMON_API_URL
 from httpx._status_codes import codes
 
-from src.exceptions import PokemonNotFoundError
+from exceptions import PokemonNotFoundError
 
 
 class AsyncPokemonRestApiConsumer:

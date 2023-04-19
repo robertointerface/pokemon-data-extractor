@@ -1,14 +1,13 @@
-import asyncio
-import uuid
+
 from httpx import AsyncClient
 import asyncio
-from src.constants import JSON_FILE_SAVER_MODE, DEFAULT_JSON_FILE
-from src.data_extractors.data_extractor_manager import DataExtractorManager
-from src.data_savers.data_saver_manager import DataSaverManager
-from src.data_savers.json_file_saver import JsonFileSaver
-from src.error_handler import LogErrors
-from src.job_status import PipelineStatus
-from src.queue_workers import JobQueue
+from constants import JSON_FILE_SAVER_MODE, DEFAULT_JSON_FILE
+from data_extractors.data_extractor_manager import DataExtractorManager
+from data_savers.data_saver_manager import DataSaverManager
+from data_savers.json_file_saver import JsonFileSaver
+from error_handler import LogErrors
+from job_status import PipelineStatus
+from queue_workers import JobQueue
 
 
 class DataExtractorOrganizer:
@@ -79,14 +78,17 @@ class DataExtractorOrganizer:
     def set_result_exporter_mode(self, result_exporter_methodology: str):
         self._result_exporter_mode = result_exporter_methodology
 
-    async def supervisor(self, httpx_client):
-        """
+    async def supervisor(self, httpx_client: AsyncClient):
+        """Orchestrate pipeline.
+
+        - All the pipeline steps are initialized here.
+        - each pipeline step workers are initialized and connected to each step.
+        - Pipeline management instance is connected to all steps and their workers
+        - Async worker producers are initialised.
+        - async workers producers are consumed.
 
         Args:
-            httpx_client:
-
-        Returns:
-
+            httpx_client: AsyncClient used to call rest api
         """
         # if no jobs then just return, nothing to do here
         if not self.jobs:
@@ -116,6 +118,7 @@ class DataExtractorOrganizer:
         pipeline_status.pokemon_extractor_workers = data_workers_ids
         pipeline_status.pokemon_saver_workers = data_saver_ids
         pipeline_status.error_handling_workers = error_handler_ids
+        # connect pipeline management to each step
         [i.set_pipeline_status(pipeline_status)
          for i in [*data_extractor_workers,
                    *data_saver_workers,

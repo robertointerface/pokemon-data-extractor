@@ -5,7 +5,7 @@ description = "extract pokemon data with pokemon API"
 authors = ["roberto <robertointerface@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = []
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"

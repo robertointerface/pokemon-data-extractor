@@ -1,9 +1,9 @@
 import asyncio
 import uuid
-from src.data_savers.json_file_saver import JsonFileSaver
-from src.job_status import PokemonJob
+from data_savers.json_file_saver import JsonFileSaver
+from job_status import PokemonJob
 from asyncio import Queue
-from src.abc_managers import AbcJobProcessorManager
+from abc_managers import AbcJobProcessorManager
 
 
 class DataSaverManager(AbcJobProcessorManager):

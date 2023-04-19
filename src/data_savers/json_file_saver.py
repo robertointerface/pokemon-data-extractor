@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from aiofile import async_open
 from collections.abc import MutableMapping
-from src.data_savers.abstract_data_saver import AbstractDataSaver
+from data_savers.abstract_data_saver import AbstractDataSaver
 
 
 class JsonFileSaver(AbstractDataSaver):

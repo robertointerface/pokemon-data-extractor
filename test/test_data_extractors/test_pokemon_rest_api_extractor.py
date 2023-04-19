@@ -2,11 +2,11 @@
 import pytest
 from pytest_mock import mocker
 from httpx import AsyncClient
-from src.data_extractors.api_extractor import AsyncPokemonRestApiConsumer
-from src.constants import POKEMON_API_URL
+from data_extractors.api_extractor import AsyncPokemonRestApiConsumer
+from constants import POKEMON_API_URL
 from collections import abc
 
-from src.exceptions import PokemonNotFoundError
+from exceptions import PokemonNotFoundError
 
 
 @pytest.mark.unit
