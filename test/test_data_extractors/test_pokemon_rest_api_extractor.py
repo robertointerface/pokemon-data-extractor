@@ -1,3 +1,4 @@
+"""Test class AsyncPokemonRestApiConsumer"""
 import pytest
 from pytest_mock import mocker
 from httpx import AsyncClient
@@ -19,7 +20,6 @@ class TestAsyncPokemonApiExtractor:
         expected_api_url = f'{POKEMON_API_URL}/{self.POKEMON_NAME}'
         assert rest_api_url == expected_api_url
 
-    @pytest.mark.asyncio
     async def test_get_pokemon_data_method_async_client_is_awaited(self,
                                                                    mock_AsyncClient_get):
         api_consumer = AsyncPokemonRestApiConsumer(self.POKEMON_NAME)

@@ -5,10 +5,10 @@ description = "extract pokemon data with pokemon API"
 authors = ["roberto <robertointerface@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "pokemon_data_extractor"}]
+packages = []
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 httpx = "^0.24.0"
 aiofile = "^3.8.5"
 
