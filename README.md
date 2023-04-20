@@ -8,6 +8,15 @@ on json file but that can easy be configured due to the chain of responsability
 pattern that allows removing and adding code like lego bricks. <br>
 3 - If any errors occurred during any previous steps log them. <br>
 
+# How to run it.
+- You can run it locally, package management is poetry. if you don't have it,
+install it according to documentation https://python-poetry.org/docs/#installation.
+Navigate to directory where poetry file poetry.lock is located and run "poetry install". 
+ Once is installed, set the interpreter created by poetry,
+ this is normally under ~/.cache/pypoetry/virtualenvs, once is done you can simple
+ run file as a script src/main.py "pokemon_name1" "pokemon_name2" ...
+- You can also build the dockerfile and run it in isolation.
+
 
 # So what is so special about this design? <br>
 1 - All steps are happening concurrently thanks to Asyncio library. <br>

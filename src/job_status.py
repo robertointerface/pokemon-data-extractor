@@ -8,6 +8,8 @@ class JobResult:
     pokemon_data: dict
 
 
+
+
 @dataclass
 class PipelineStatus:
     """Over all pipeline status, monitor the pipeline status to keep track
