@@ -30,7 +30,7 @@ class DataSaverManager(AbcJobProcessorManager):
         as maybe it terminates but the queue starts getting full right after."""
         return (not self.receive_queue.empty()
                 or
-                not self.pipeline_status.pokemon_data_extractor_finished)
+                not self.pipeline_status.pokemon_data_saver_finished)
 
     def set_pipeline_status(self, pipeline_status):
         self.pipeline_status = pipeline_status
@@ -60,6 +60,8 @@ class DataSaverManager(AbcJobProcessorManager):
                 current_job = await asyncio.wait_for(self.get_job(),
                                                      timeout=0.25)
             except asyncio.TimeoutError:
+                if self.pipeline_status.pokemon_data_extractor_finished and self.receive_queue.empty():
+                    self.pipeline_status.pokemon_saver_workers[self.worker_id()] = False
                 data_workers_active = [
                     v for _, v in self.pipeline_status.pokemon_saver_workers.items() if v]
                 if not data_workers_active:
@@ -72,6 +74,3 @@ class DataSaverManager(AbcJobProcessorManager):
                     await work_processor.save_data(pokemon_result.pokemon_data)
                     current_job.set_job_status_saved_data()
                 await self.send_queue.put(current_job)
-                if self.pipeline_status.pokemon_data_extractor_finished and self.receive_queue.empty():
-                    self.pipeline_status.set_pokemon_data_saver_finished()
-

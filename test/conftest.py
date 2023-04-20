@@ -9,9 +9,9 @@ import json
 from collections import abc
 from pathlib import Path
 
-from src.data_savers.json_file_saver import JsonFileSaver
-from src.job_status import PokemonJob
-from src.queue_workers import JobQueue
+from data_savers.json_file_saver import JsonFileSaver
+from job_status import PokemonJob
+from queue_workers import JobQueue
 
 TEST_DATA_PATH = Path(__file__).parent / 'test_data'
 POKEMONS_TO_TEST = ['mewtwo', 'charmander', 'gengar',

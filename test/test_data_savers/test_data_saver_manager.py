@@ -2,10 +2,10 @@
 import pytest
 from asyncio import Queue
 
-from src.constants import DEFAULT_JSON_FILE
-from src.data_savers.data_saver_manager import DataSaverManager
-from src.data_savers.json_file_saver import JsonFileSaver
-from src.job_status import PokemonJob, PipelineStatus
+from constants import DEFAULT_JSON_FILE
+from data_savers.data_saver_manager import DataSaverManager
+from data_savers.json_file_saver import JsonFileSaver
+from job_status import PokemonJob, PipelineStatus
 
 @pytest.mark.unit
 class TestDataSaverManager:
